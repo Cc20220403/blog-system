@@ -3,10 +3,12 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { getPostsApi } from '../api/posts'
 import { getCategoriesApi } from '../api/categories'
 import { formatDateShort } from '../utils/format'
+import { useAuth } from '../context/AuthContext'
 import SEOHead from '../components/SEOHead'
 import type { PostListItem, Category } from '../types'
 
 function HomePage() {
+  const { user, logout } = useAuth()
   const [posts, setPosts] = useState<PostListItem[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [total, setTotal] = useState(0)
@@ -89,7 +91,11 @@ function HomePage() {
         <div style={styles.headerActions}>
           <Link to="/write" style={styles.headerLink}>写文章</Link>
           <Link to="/profile" style={styles.headerLink}>个人中心</Link>
-          <Link to="/login" style={styles.headerLink}>登录</Link>
+          {user ? (
+            <button onClick={logout} style={styles.logoutBtn}>退出</button>
+          ) : (
+            <Link to="/login" style={styles.headerLink}>登录</Link>
+          )}
         </div>
       </header>
 
@@ -205,7 +211,8 @@ const styles: Record<string, React.CSSProperties> = {
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', borderBottom: '1px solid #eee' },
   logo: { fontSize: '1.25rem', cursor: 'pointer' },
   headerActions: { display: 'flex', gap: '1rem' },
-  headerLink: { color: '#1677ff', fontSize: '0.875rem' },
+  headerLink: { color: '#1677ff', fontSize: '0.875rem', textDecoration: 'none' },
+  logoutBtn: { color: '#ff4d4f', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 },
   searchSection: { padding: '1.5rem 0 1rem' },
   searchForm: { display: 'flex', gap: '0.5rem' },
   searchInput: { flex: 1, padding: '0.5rem 0.75rem', border: '1px solid #ddd', borderRadius: 4, fontSize: '1rem' },

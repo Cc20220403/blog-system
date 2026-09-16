@@ -39,17 +39,20 @@ function LikeButton({ articleId, initialCount = 0 }: LikeButtonProps) {
     }
   }
 
+  // 只要有人点赞或当前用户已赞，就显示红色
+  const showRed = isLiked || likesCount > 0
+
   return (
     <button
       onClick={handleToggle}
       disabled={loading || !user}
       style={{
         ...styles.button,
-        ...(isLiked ? styles.liked : {}),
+        ...(showRed ? styles.liked : {}),
       }}
       title={user ? (isLiked ? '取消点赞' : '点赞') : '请先登录'}
     >
-      <span style={styles.heart}>{isLiked ? '❤️' : '🤍'}</span>
+      <span style={styles.heart}>{showRed ? '❤️' : '🤍'}</span>
       <span style={styles.count}>{likesCount}</span>
     </button>
   )
